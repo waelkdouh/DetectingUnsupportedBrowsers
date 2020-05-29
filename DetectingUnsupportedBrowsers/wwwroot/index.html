@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DetectingUnsupportedBrowsers</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+</head>
+
+<body>
+    <app>Loading...</app>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+
+    <!--prevent autostarting-->
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+
+    <script>
+
+        //check if webassembly is supported
+        const webassemblySupported = (function () {
+            try {
+                if (typeof WebAssembly === "object"
+                    && typeof WebAssembly.instantiate === "function") {
+                    const module = new WebAssembly.Module(
+                        Uint8Array.of(0x0, 0x61, 0x73, 0x6d,
+                            0x01, 0x00, 0x00, 0x00));
+                    if (module instanceof WebAssembly.Module)
+                        return new WebAssembly.Instance(module)
+                            instanceof WebAssembly.Instance;
+                }
+            } catch (e) {
+            }
+            return false;
+        })();
+
+        // Modern browsers e.g. Microsoft Edge
+        if (webassemblySupported) {
+            Blazor.start({});
+        }
+        // Older browsers e.g. IE11
+        else {
+            window.location = window.location + "BrowserNotSupported.html";
+        }
+
+    </script>
+</body>
+
+</html>
